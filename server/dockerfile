@@ -1,17 +1,11 @@
-FROM golang:1.20.1-alpine3.16
-
-RUN go install github.com/cosmtrek/air@latest
+FROM node:18.16.0-alpine
 
 WORKDIR /app
 
-COPY server/go.mod server/go.sum ./
+COPY server/package.json server/yarn.lock ./
 
-# RUN go get -u github.com/gin-gonic/gin
+RUN yarn install
 
-# 依存関係のダウンロード
-RUN go mod download
+COPY server/. .
 
-COPY /server .
-
-CMD ["air", "-c", ".air.toml"]
-# CMD [ "go", "run", "main.go" ]
+CMD [ "yarn", "start:dev" ]
